@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instant Calculator</title>
+    <title>RIT Instant Calculator</title>
     <style>
+        /* RIT Brand Palette Mapping:
+           Primary: #F76902 (RIT Orange), #FFFFFF (White)
+           Secondary: #000000 (Black), #D0D3D4 (PMS 427C), #A2AAAD (PMS 429C), #7C878E (PMS 430C)
+           Accents: #DA291C (PMS 485C - Red for Clear)
+        */
+
         * {
             margin: 0;
             padding: 0;
@@ -17,37 +23,39 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: #0d1117;
-            color: #e6edf3;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: #F4F4F4; /* Light background to make the black/orange pop */
+            color: #000000;
             padding: 20px;
         }
 
         h1 {
-            font-size: 1.4rem;
-            font-weight: 500;
+            font-size: 1.6rem;
+            font-weight: 700;
             margin-bottom: 24px;
-            color: #8b949e;
-            letter-spacing: 0.02em;
+            color: #000000;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 4px solid #F76902; /* RIT Orange accent */
+            padding-bottom: 8px;
         }
 
         .calculator {
-            background: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 16px;
+            background: #000000; /* RIT Black */
+            border-radius: 8px; /* Sharper, more professional corners */
             padding: 24px;
-            width: 320px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            width: 340px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
         }
 
         .display {
-            background: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 10px;
+            background: #FFFFFF;
+            border: 2px solid #7C878E; /* PMS 430C */
+            border-radius: 4px;
             padding: 16px 20px;
             margin-bottom: 20px;
             text-align: right;
-            min-height: 80px;
+            min-height: 100px;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -55,101 +63,113 @@
 
         .display .previous {
             font-size: 0.9rem;
-            color: #484f58;
+            color: #7C878E; /* PMS 430C */
             min-height: 1.2em;
             word-break: break-all;
+            margin-bottom: 4px;
         }
 
         .display .current {
-            font-size: 2.2rem;
-            font-weight: 300;
-            color: #e6edf3;
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #000000;
             word-break: break-all;
-            line-height: 1.2;
+            line-height: 1.1;
         }
 
         .buttons {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            gap: 12px;
         }
 
         button {
-            padding: 18px;
-            font-size: 1.15rem;
+            padding: 18px 10px;
+            font-size: 1.2rem;
             font-family: inherit;
-            border: 1px solid #30363d;
-            border-radius: 10px;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
-            transition: all 0.12s ease;
-            font-weight: 400;
-            background: #21262d;
-            color: #e6edf3;
+            transition: all 0.1s ease;
+            font-weight: 600;
+            background: #D0D3D4; /* PMS 427C - Light Neutral */
+            color: #000000;
         }
 
         button:hover {
-            background: #30363d;
+            background: #A2AAAD; /* PMS 429C */
         }
 
         button:active {
-            transform: scale(0.96);
+            transform: translateY(2px);
         }
 
+        /* Operators use the Primary RIT Orange */
         button.operator {
-            background: #1f6feb;
-            border-color: #1f6feb;
-            color: #fff;
-            font-weight: 500;
+            background: #F76902;
+            color: #FFFFFF;
         }
 
         button.operator:hover {
-            background: #388bfd;
+            background: #D65A00; /* Darker shade of RIT Orange */
         }
 
+        /* Clear uses Accent Red */
         button.clear {
-            background: #da3633;
-            border-color: #da3633;
-            color: #fff;
+            background: #DA291C;
+            color: #FFFFFF;
         }
 
         button.clear:hover {
-            background: #f85149;
+            background: #B51F15;
         }
 
+        /* Equals uses Primary RIT Orange with a border to emphasize it */
         button.equals {
-            background: #238636;
-            border-color: #238636;
-            color: #fff;
-            font-weight: 500;
+            background: #F76902;
+            color: #FFFFFF;
+            box-shadow: 0 0 0 2px #FFFFFF inset;
         }
 
         button.equals:hover {
-            background: #2ea043;
+            background: #D65A00;
         }
 
         button.wide {
             grid-column: span 2;
         }
 
+        /* Utility button for backspace using a mid-gray */
+        .backspace-btn {
+            background: #A2AAAD;
+            color: #FFFFFF;
+        }
+
         .footer {
             margin-top: 32px;
-            font-size: 0.8rem;
-            color: #484f58;
+            font-size: 0.85rem;
+            color: #7C878E;
+            text-align: center;
+        }
+
+        .footer b {
+            color: #F76902;
         }
 
         .footer a {
-            color: #58a6ff;
-            text-decoration: none;
+            color: #000000;
+            text-decoration: underline;
+            font-weight: 600;
         }
 
         .footer a:hover {
-            text-decoration: underline;
+            color: #F76902;
         }
     </style>
 </head>
 <body>
 
-    <h1>Instant Calculator</h1>
+    <h1>RIT Instant Calculator</h1>
 
     <div class="calculator">
         <div class="display">
@@ -158,7 +178,7 @@
         </div>
         <div class="buttons">
             <button class="clear wide" onclick="clearAll()">Clear</button>
-            <button onclick="backspace()">&#9003;</button>
+            <button class="backspace-btn" onclick="backspace()">&#9003;</button>
             <button class="operator" onclick="setOperator('/')">÷</button>
 
             <button onclick="appendNumber('7')">7</button>
@@ -182,7 +202,9 @@
         </div>
     </div>
 
-    <p class="footer">Built for MGIS 360 &middot; Hosted on <a href="https://pages.github.com" target="_blank">GitHub Pages</a></p>
+    <p class="footer">
+        Built for <b>MGIS 360</b> &middot; Hosted on <a href="https://pages.github.com" target="_blank">GitHub Pages</a>
+    </p>
 
     <script>
         let current = '0';
@@ -260,6 +282,7 @@
             updateDisplay();
         }
 
+        // Keyboard support
         document.addEventListener('keydown', function(e) {
             if (e.key >= '0' && e.key <= '9') appendNumber(e.key);
             else if (e.key === '.') appendNumber('.');
@@ -272,6 +295,5 @@
             else if (e.key === 'Escape') clearAll();
         });
     </script>
-
 </body>
 </html>
